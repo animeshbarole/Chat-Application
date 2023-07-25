@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <!--  this is animesh
+   
+       <button id="btn">
+        click to see Client Server Reciving 
+       </button>
+      <div id="From_server">
+
+      </div> -->
+
+      <h1>Chatting.....With <%= groupName%></h1>
+      
+      <input type="text" id="chat_box">
+      <button id = "send"> Send</button>
+      <ul id="msg_list">
+        
+      </ul>
+
+
+    
+      <script src="/socket.io/socket.io.js"></script>
+
+      <!-- We are writing script here so that we can remove error but we can segrreated out -->
+      <script >
+         var socket = io();
+         let input = document.getElementById("chat_box");
+         let send = document.getElementById("send");
+         let msglist = document.getElementById("msg_list");
+        
+
+         socket.emit("join_room",{ 
+             roomid : '<%= roomid %>', //We need to put it in string to avoid error
+         });
+
+         send.addEventListener("click",()=>{
+             
+              let msg = input.value;
+        
+              socket.emit('new_msg',{
+                message : msg,
+                roomid : '<%= roomid %>',
+                sender: '<%= user %>',
+              
+              });
+        
+           
+             input.value =" ";
+         });
+         socket.on("msg_recived",(data)=>{
+                  
+            let msg = document.createElement("li");
+            msg.textContent = data.sender+'-' + data.message;
+            msglist.appendChild(msg);
+        });  
+
+
+      </script>
+    
+</body>
+</html>
