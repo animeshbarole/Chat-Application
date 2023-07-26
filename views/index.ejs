@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chat Application</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+
+
+   
+
+   
 </head>
 <body>
     
@@ -16,14 +22,27 @@
 
       </div> -->
 
-      <h1>Chatting.....With <%= groupName%></h1>
+      <h1  >Chatting.....With <%= groupName%></h1>
+    
+     <input type="text" placeholder="Write your msg" id="chat_box">
       
-      <input type="text" id="chat_box">
+     
       <button id = "send"> Send</button>
+
       <ul id="msg_list">
-        
+            
+                     
+        <% for(let i = 0;i<previousmsg.length;i++) {%>
+     
+           <p class="multi-msg"> <%= previousmsg[i].sender %> - <%= previousmsg[i].content %></p> 
+
+        <%}%>
+
       </ul>
 
+    
+
+    
 
     
       <script src="/socket.io/socket.io.js"></script>
@@ -56,7 +75,7 @@
          });
          socket.on("msg_recived",(data)=>{
                   
-            let msg = document.createElement("li");
+            let msg = document.createElement("p");
             msg.textContent = data.sender+'-' + data.message;
             msglist.appendChild(msg);
         });  
@@ -66,3 +85,25 @@
     
 </body>
 </html>
+
+
+
+
+<html>
+  <head>
+    <title>Chat Box UI Design</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Import this CDN to use icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+    />
+  </head>
+
+  <body>
+   
+  </body>
+</html>
+
+

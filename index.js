@@ -7,12 +7,14 @@ const io = new Server(server); //Passing sever object into the contructor
 const connect  = require('./config/db-config');
 
 const Group  = require('./models/group')
+const Chat = require('./models/chat');
 
 //MiddleWare
 app.set('view engine','ejs');
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-//app.use('/',express.static(__dirname + '/public'));
+//app.use(express.static('/public'));
+app.use(express.static(__dirname + '/public'));
 
 io.on('connection', (socket) => {
     console.log('a user connected',socket.id);
@@ -29,16 +31,19 @@ io.on('connection', (socket) => {
     })
  
    
-     socket.on("new_msg",(data)=>{
+     socket.on("new_msg", async (data) => {
         
-   
-      console.log(data);
+     console.log("Message Recivid",data);
+
+      const chat = await Chat.create({
+            
+             roomid: data.roomid,
+             sender : data.sender,
+             content : data.message,
+      });
       io.to(data.roomid).emit("msg_recived",data);
    
      });
-
-    
-
 
   });
 
@@ -46,11 +51,15 @@ io.on('connection', (socket) => {
   app.get('/chat/:roomid/:user',async(req,res)=>{
        
      const group  = await Group.findById(req.params.roomid);
-  
+     const chats  = await  Chat.find({
+        roomid : req.params.roomid,
+     })
+
      res.render('index',{
       roomid:req.params.roomid,
       user : req.params.user,
-     groupName : group.name,
+      groupName : group.name,
+      previousmsg : chats,
     });
      
   });
